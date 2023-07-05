@@ -4,12 +4,18 @@ const http = require("http");
 //definindo a porta do servidor local
 const port = 3000;
 
+//criando o objeto de rotas 
+const rotas = {
+    '/': 'Curso de Node',
+    '/livros': 'pag de livro',
+    '/autores': 'lista autores',
+}
 //criando o servidor
 const server = http.createServer((req, res) => {
     //o que o servidor vai devolver, qual a resposta
     res.writeHead(200, {'Content-Type': 'text/plain'});
 
-    res.end('Curso de Node');
+    res.end(rotas[req.url]);
 });
 
 //a porta que o servidor vai escutar a resposta
