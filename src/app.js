@@ -1,4 +1,16 @@
 import express from "express";
+import db from "./config/dbConnect.js"
+import livros from "./Models/Livro.js";
+import routes from "./routes/index.js";
+
+//criando a conexão com o banco de dados
+
+db.on("error", console.log.bind(console, 'Erro de conexão'));
+
+db.once("open", () => {
+    console.log('conexão com o banco feita com sucesso')
+  });
+
 
 //instanciando o express
 const app = express();
@@ -6,21 +18,14 @@ const app = express();
 //código para que a requisição entenda que é em json
 app.use(express.json());
 
+//instanciando a constante routes
+routes(app);
+
 //criando o array de livro
-const livros = [
-    {id: 1, "titulo": "Senhor dos anéis"},
-    {id: 2, "titulo": "O hobbit"}
-]
-
-//o que acontece quando fizer a requisição pra essa rota
-app.get('/', (req, res) => {
-    res.status(200).send('Curso de Node');
-})
-
-//escolho o json para que ele retorne o conteúdo
-app.get('/livros', (req, res) => {
-    res.status(200).json(livros);
-})
+//const livros = [
+//    {id: 1, "titulo": "Senhor dos anéis"},
+//    {id: 2, "titulo": "O hobbit"}
+//]
 
 //procurando um livro pelo id 
 app.get('/livros/:id', (req, res) => {
@@ -28,12 +33,6 @@ app.get('/livros/:id', (req, res) => {
     res.json(livros[index]);
 })
 
-
-//enviando um cadastro novo
-app.post('/livros', (req, res) => {
-    livros.push(req.body);
-    res.status(201).send('Livro cadastrado.')
-})
 
 //alterando um cadastro 
 app.put('/livros/:id', (req, res) => {
