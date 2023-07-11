@@ -7,6 +7,9 @@ router
 //busca de todos os livros
 .get("/livros", livroController.listarLivros)
 
+//busca livros por editora
+.get("/livros/busca", livroController.listarLivroPorEditora)
+
 //busca livros por ID
 .get("/livros/:id", livroController.listarLivroPorId)
 

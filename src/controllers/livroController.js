@@ -1,9 +1,12 @@
-import livros from "../Models/Livro.js";
+import livros from "../models/Livro.js";
 
 class livroController {
     //busca de todos os livros
     static listarLivros = (req, res) => {
-        livros.find((err, livros) => {
+        //o método encontra o livro, "popula" - interliga com os autores e executa a instrução.
+        livros.find()
+        .populate('autor')
+        .exec((err, livros) => {
             //escolho o json para que ele retorne o conteúdo
             res.status(200).json(livros);
         })
@@ -13,9 +16,11 @@ class livroController {
     static listarLivroPorId = (req, res) => {
         const id = req.params.id;
 
-        livros.findById(id, (err, livros) =>{
-            if(err){
-                res.status(400).send({message: `${err.message} - Id do livro não localizado.`})
+       livros.findById(id)
+        .populate('autor', 'nome')
+        .exec((err, livros) => {
+            if(err) {
+                res.status(400).send({message: `${err.message} - Id do livro`})
             } else {
                 res.status(200).send(livros);
             }
@@ -47,6 +52,7 @@ class livroController {
 
     }
 
+    //excluindo um livro
     static excluirLivro = (req, res) => {
         const id = req.params.id;
 
@@ -57,6 +63,15 @@ class livroController {
                 res.status(500).send({message: err.message})
             }
         })
+    }
+
+    //buscando livro por editora
+    static listarLivroPorEditora = (req, res) => {
+        const editora = req.query.editora;
+
+        livros.find({'editora': editora}, {}, (err, livros) => {
+            res.status(200).send(livros);
+        });
     }
 }
 
